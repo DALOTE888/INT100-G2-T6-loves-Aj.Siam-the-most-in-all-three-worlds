@@ -10,3 +10,9 @@
 
 ## What-How-Why
 [View What-How-Why](./empathize/what_how_why.md)
+
+## User Persona
+[View User Persona](./empathize/userpersona.md)
+
+## POINT OF VIEW (POV)
+[View POINT OF VIEW](./define/pov.md)
