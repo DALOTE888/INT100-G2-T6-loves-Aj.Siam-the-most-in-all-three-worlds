@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BuriromRepair - ระบบแจ้งซ่อมสวนธนบุรีรมย์</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt & Kanit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                        },
+                        amber: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Prompt', 'Kanit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Prompt', 'Kanit', sans-serif;
+            background-color: #f1f5f9;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.9); opacity: 0.8; }
+            50% { transform: scale(1.35); opacity: 0.25; }
+            100% { transform: scale(0.9); opacity: 0.8; }
+        }
+
+        .pin-pulse-ready {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: rgba(16, 185, 129, 0.4);
+            animation: pulse-ring 2.2s infinite ease-in-out;
+        }
+
+        .pin-pulse-repair {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: rgba(245, 158, 11, 0.5);
+            animation: pulse-ring 1.5s infinite ease-in-out;
+        }
+
+        .glass-header {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .active-tap:active {
+            transform: scale(0.96);
+        }
+
+        /* Modal pop-in animation */
+        @keyframes modalPop {
+            0% { opacity: 0; transform: scale(0.92) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .animate-modal {
+            animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-0 sm:p-4 text-slate-800 antialiased">
+
+    <!-- Main Mobile Application Container -->
+    <div id="appContainer" class="w-full max-w-[480px] h-screen sm:h-[880px] bg-white sm:rounded-[36px] shadow-2xl relative overflow-hidden flex flex-col border border-slate-200">
+
+        <!-- Notification Toast -->
+        <div id="toast" class="fixed sm:absolute top-5 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-[400px] bg-slate-900/95 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none translate-y-[-20px]">
+            <div id="toastIcon" class="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-check text-sm text-white"></i>
+            </div>
+            <p id="toastMessage" class="text-xs sm:text-sm font-medium leading-tight flex-1">แจ้งเตือนสำเร็จ</p>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 1. LOGIN SCREEN VIEW                       -->
+        <!-- ========================================== -->
+        <section id="loginScreen" class="flex-1 flex flex-col justify-between p-6 sm:p-8 bg-gradient-to-b from-slate-50 via-white to-emerald-50/50 relative z-10 overflow-y-auto">
+            
+            <!-- Logo Header -->
+            <div class="pt-8 text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-500/10 text-emerald-600 mb-4 shadow-inner">
+                    <i class="fa-solid fa-screwdriver-wrench text-3xl"></i>
+                </div>
+                <!-- Required Bold Label "BuriromRepair" -->
+                <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 font-sans">
+                    Burirom<span class="text-emerald-600">Repair</span>
+                </h1>
+                <p class="text-xs sm:text-sm text-slate-500 mt-2 font-light">
+                    ระบบแจ้งซ่อมและติดตามสถานะสิ่งอำนวยความสะดวก<br>สวนธนบุรีรมย์ (Thonburirom Park)
+                </p>
+            </div>
+
+            <!-- Login Credentials Form -->
+            <div class="my-auto py-6">
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 space-y-4">
+                    <h2 class="text-base font-semibold text-slate-800 text-center mb-1">เข้าสู่ระบบ</h2>
+                    
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1.5 pl-1">ชื่อผู้ใช้งาน (Username)</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <i class="fa-regular fa-user text-sm"></i>
+                            </span>
+                            <input type="text" id="usernameInput" value="user" placeholder="กรอก Username"
+                                class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1.5 pl-1">รหัสผ่าน (Password)</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <i class="fa-solid fa-lock text-sm"></i>
+                            </span>
+                            <input type="password" id="passwordInput" value="1234" placeholder="กรอก Password"
+                                class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all">
+                        </div>
+                    </div>
+
+                    <div class="bg-emerald-50/80 border border-emerald-100 rounded-xl p-2.5 flex items-start gap-2 text-xs text-emerald-800">
+                        <i class="fa-solid fa-circle-info text-emerald-500 mt-0.5 shrink-0"></i>
+                        <span>Username: <b>user</b> | Password: <b>1234</b></span>
+                    </div>
+
+                    <!-- Dual Login Buttons -->
+                    <div class="space-y-2.5 pt-2">
+                        <!-- User Login Button -->
+                        <button id="userLoginBtn" onclick="handleUserLogin()"
+                            class="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-xl shadow-md active-tap transition-all flex items-center justify-center gap-2 text-sm">
+                            <span>เข้าสู่ระบบสำหรับผู้ใช้งาน</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+
+                        <!-- Staff Login Button (Non-operational dialog trigger) -->
+                        <button id="staffLoginBtn" onclick="handleStaffLogin()"
+                            class="w-full py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl active-tap transition-all flex items-center justify-center gap-2 text-xs sm:text-sm">
+                            <i class="fa-solid fa-user-shield text-slate-500"></i>
+                            <span>เข้าสู่ระบบสำหรับเจ้าหน้าที่</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center text-[11px] text-slate-400 font-light pb-2">
+                &copy; 2026 BuriromRepair - สวนธนบุรีรมย์ กทม.
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 2. MAP & DASHBOARD SCREEN VIEW             -->
+        <!-- ========================================== -->
+        <section id="userDashboard" class="hidden flex-1 flex-col h-full bg-slate-50 relative overflow-hidden">
+            
+            <!-- Top Header -->
+            <header class="glass-header border-b border-slate-200/80 px-4 py-3 z-30 flex items-center justify-between shrink-0 shadow-xs">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-sm font-bold text-base">
+                        B
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-slate-900 leading-tight">Burirom<span class="text-emerald-600">Repair</span></h1>
+                        <p class="text-[10px] text-slate-500 font-medium flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+                            แผนที่สวนธนบุรีรมย์
+                        </p>
+                    </div>
+                </div>
+
+                <button onclick="handleLogout()" title="ออกจากระบบ"
+                    class="p-2.5 rounded-xl text-slate-500 hover:text-red-600 hover:bg-red-50 active-tap transition-colors border border-slate-200">
+                    <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                </button>
+            </header>
+
+            <!-- Status Summary Count Legend Bar (Req 1) -->
+            <div class="bg-white border-b border-slate-200/60 px-3 py-2 z-20 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar shrink-0 shadow-xs text-xs">
+                <!-- Count status summary badges -->
+                <div class="flex items-center gap-2">
+                    <button onclick="filterPins('all')" id="filter-all" class="filter-btn active py-1 px-2.5 rounded-full font-medium bg-slate-900 text-white shrink-0 text-[11px]">
+                        ทั้งหมด (<span id="count-all">7</span>)
+                    </button>
+                    <button onclick="filterPins('ready')" id="filter-ready" class="filter-btn py-1 px-2.5 rounded-full font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 shrink-0 text-[11px] flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        พร้อมใช้งาน (<span id="count-ready">4</span>)
+                    </button>
+                    <button onclick="filterPins('repair')" id="filter-repair" class="filter-btn py-1 px-2.5 rounded-full font-medium bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 shrink-0 text-[11px] flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                        กำลังซ่อมแซม (<span id="count-repair">3</span>)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Map Viewport -->
+            <div class="flex-1 relative overflow-hidden bg-slate-200 select-none">
+                
+                <!-- Map Layer Container -->
+                <div id="mapWrapper" class="relative w-full h-full min-h-[420px]">
+                    <!-- Thonburirom Park Map Image (input_file_0.png with fallbacks) -->
+
+                    <!-- Pins Overlay Layer -->
+                    <div id="pinsContainer" class="absolute inset-0">
+                        <!-- Pins generated dynamically via Javascript -->
+                    </div>
+                </div>
+
+                <!-- Floating Zoom & Reset Map Controls -->
+                <div class="absolute bottom-4 right-4 z-20 flex flex-col gap-2">
+                    <button onclick="zoomMap(1.1)" title="ขยายแผนที่" class="w-9 h-9 rounded-xl bg-white/95 backdrop-blur text-slate-700 shadow-md border border-slate-200 flex items-center justify-center active-tap">
+                        <i class="fa-solid fa-plus text-xs"></i>
+                    </button>
+                    <button onclick="zoomMap(0.9)" title="ย่อแผนที่" class="w-9 h-9 rounded-xl bg-white/95 backdrop-blur text-slate-700 shadow-md border border-slate-200 flex items-center justify-center active-tap">
+                        <i class="fa-solid fa-minus text-xs"></i>
+                    </button>
+                    <button onclick="resetMapView()" title="มุมมองปกติ" class="w-9 h-9 rounded-xl bg-white/95 backdrop-blur text-slate-700 shadow-md border border-slate-200 flex items-center justify-center active-tap">
+                        <i class="fa-solid fa-compress text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Hint Tooltip Banner -->
+                <div class="absolute top-3 left-1/2 -translate-x-1/2 z-20 bg-slate-900/80 backdrop-blur-md text-white text-[11px] px-3.5 py-1.5 rounded-full shadow-lg pointer-events-none flex items-center gap-1.5">
+                    <i class="fa-solid fa-location-dot text-red-500"></i>
+                    <span>กดจุดหมุดสีแดงบนแผนที่เพื่อดูรายละเอียด</span>
+                </div>
+            </div>
+
+            <!-- Centered Bottom Bar Legend & Status -->
+            <div class="bg-white border-t border-slate-200 px-4 py-3 z-20 flex items-center justify-center gap-6 text-xs text-slate-600 shrink-0">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-emerald-200"></span>
+                    <span class="font-medium text-slate-700">พร้อมใช้งาน (4 จุด)</span>
+                </div>
+                <div class="w-px h-4 bg-slate-200"></div>
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-amber-500 ring-2 ring-amber-200"></span>
+                    <span class="font-medium text-slate-700">กำลังซ่อมแซม (3 จุด)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 3. CENTERED INTERACTIVE PIN MODAL          -->
+        <!-- ========================================== -->
+        <div id="pinModal" class="hidden fixed sm:absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+            
+            <div class="bg-white rounded-3xl shadow-2xl border border-slate-100 max-w-sm w-full p-5 relative overflow-hidden animate-modal my-auto">
+                
+                <!-- Close Modal Button -->
+                <button onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center active-tap transition-colors">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+
+                <!-- Modal Inner Dynamic Content -->
+                <div id="modalContent">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 4. STAFF LOGIN UNAVAILABLE MODAL           -->
+        <!-- ========================================== -->
+        <div id="staffModal" class="hidden fixed sm:absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl p-6 max-w-xs w-full text-center shadow-2xl border border-slate-100 animate-modal">
+                <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                    <i class="fa-solid fa-user-lock text-2xl"></i>
+                </div>
+                <h3 class="text-base font-bold text-slate-800 mb-1">แจ้งเตือนระบบ</h3>
+                <p class="text-xs text-slate-600 mb-5 leading-relaxed">
+                    ระบบเข้าสู่ระบบสำหรับเจ้าหน้าที่ยังไม่เปิดให้ใช้งานในขณะนี้
+                </p>
+                <button onclick="closeStaffModal()" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl active-tap transition-all">
+                    ตกลง
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Staff details as required
+        const defaultStaff = {
+            name: 'นายสมศักดิ์ บริการดี',
+            role: 'เจ้าหน้าที่ดูแลสวนประจำจุด',
+            photo: 'input_file_1.png',
+            phone: '0812345678'
+        };
+
+        // 7 distinct pins: 4 ready (พร้อมใช้งาน), 3 under repair (กำลังซ่อมแซม/ทำความสะอาด)
+        let pinData = [
+            {
+                id: 1,
+                name: 'ม้านั่ง โซน A (ริมสระน้ำ)',
+                category: 'bench',
+                typeLabel: 'ม้านั่ง',
+                icon: 'fa-couch',
+                status: 'ready', // พร้อมใช้งาน
+                statusText: 'ม้านั่งพร้อมใช้งาน',
+                lastServiceTime: '11:00น.',
+                x: 26,
+                y: 48,
+                locationDetail: 'ม้านั่งริมสระน้ำฝั่งทิศใต้ โซน A'
+            },
+            {
+                id: 2,
+                name: 'ห้องน้ำ โซน A (อาคารอำนวยการ)',
+                category: 'restroom',
+                typeLabel: 'ห้องน้ำ',
+                icon: 'fa-restroom',
+                status: 'repair', // กำลังซ่อมแซม
+                statusText: 'ห้องน้ำกำลังซ่อมแซม/ทำความสะอาด',
+                repairTime: '13:00น. - 16:00น.',
+                x: 34,
+                y: 18,
+                locationDetail: 'ห้องน้ำข้างอาคารเรือนกระจก โซน A',
+                staff: defaultStaff
+            },
+            {
+                id: 3,
+                name: 'ม้านั่ง โซน B (ทางเดินเรือนกระจก)',
+                category: 'bench',
+                typeLabel: 'ม้านั่ง',
+                icon: 'fa-couch',
+                status: 'repair', // กำลังซ่อมแซม
+                statusText: 'ม้านั่งกำลังซ่อมแซม',
+                repairTime: '13:00น. - 16:00น.',
+                x: 52,
+                y: 28,
+                locationDetail: 'ม้านั่งใต้ร่มไม้ริมทางเดิน โซน B',
+                staff: defaultStaff
+            },
+            {
+                id: 4,
+                name: 'ห้องน้ำ โซน B (ทิศเหนือ)',
+                category: 'restroom',
+                typeLabel: 'ห้องน้ำ',
+                icon: 'fa-restroom',
+                status: 'ready', // พร้อมใช้งาน
+                statusText: 'ห้องน้ำพร้อมใช้งาน',
+                lastServiceTime: '10:15น.',
+                x: 41,
+                y: 8,
+                locationDetail: 'ห้องน้ำสาธารณะฝั่งทิศเหนือ โซน B'
+            },
+            {
+                id: 5,
+                name: 'ม้านั่ง โซน C (สวนหิน)',
+                category: 'bench',
+                typeLabel: 'ม้านั่ง',
+                icon: 'fa-couch',
+                status: 'ready', // พร้อมใช้งาน
+                statusText: 'ม้านั่งพร้อมใช้งาน',
+                lastServiceTime: '09:30น.',
+                x: 78,
+                y: 26,
+                locationDetail: 'ม้านั่งหินอ่อนบริเวณสวนหิน โซน C'
+            },
+            {
+                id: 6,
+                name: 'ห้องน้ำ โซน C (ลานกิจกรรม)',
+                category: 'restroom',
+                typeLabel: 'ห้องน้ำ',
+                icon: 'fa-restroom',
+                status: 'repair', // กำลังซ่อมแซม
+                statusText: 'ห้องน้ำกำลังซ่อมแซม/ทำความสะอาด',
+                repairTime: '13:00น. - 16:00น.',
+                x: 22,
+                y: 68,
+                locationDetail: 'ห้องน้ำใกล้มุมเด็กเล่น ลานกิจกรรม',
+                staff: defaultStaff
+            },
+            {
+                id: 7,
+                name: 'ม้านั่ง โซน D (สนามหญ้าทิศใต้)',
+                category: 'bench',
+                typeLabel: 'ม้านั่ง',
+                icon: 'fa-couch',
+                status: 'ready', // พร้อมใช้งาน
+                statusText: 'ม้านั่งพร้อมใช้งาน',
+                lastServiceTime: '11:30น.',
+                x: 82,
+                y: 76,
+                locationDetail: 'ม้านั่งไม้สนามริมทางวิ่ง โซน D'
+            }
+        ];
+
+        let activeFilter = 'all';
+        let currentSelectedPin = null;
+        let mapScale = 1;
+
+        function handleUserLogin() {
+            const username = document.getElementById('usernameInput').value.trim();
+            const password = document.getElementById('passwordInput').value.trim();
+
+            if (username === 'user' && password === '1234') {
+                showToast('เข้าสู่ระบบผู้ใช้งานสำเร็จ', 'success');
+                
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('loginScreen').classList.remove('flex');
+                
+                document.getElementById('userDashboard').classList.remove('hidden');
+                document.getElementById('userDashboard').classList.add('flex');
+
+                renderPins();
+                updateCounts();
+            } else {
+                showToast('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง (user / 1234)', 'error');
+            }
+        }
+
+        function handleStaffLogin() {
+            document.getElementById('staffModal').classList.remove('hidden');
+        }
+
+        function closeStaffModal() {
+            document.getElementById('staffModal').classList.add('hidden');
+        }
+
+        function handleLogout() {
+            document.getElementById('userDashboard').classList.add('hidden');
+            document.getElementById('userDashboard').classList.remove('flex');
+            
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('loginScreen').classList.add('flex');
+            
+            closeModal();
+            showToast('ออกจากระบบเรียบร้อยแล้ว', 'info');
+        }
+
+        function renderPins() {
+            const container = document.getElementById('pinsContainer');
+            container.innerHTML = '';
+
+            const filteredPins = pinData.filter(pin => {
+                if (activeFilter === 'ready') return pin.status === 'ready';
+                if (activeFilter === 'repair') return pin.status === 'repair';
+                return true;
+            });
+
+            filteredPins.forEach(pin => {
+                const pinEl = document.createElement('div');
+                pinEl.className = 'absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer z-10 active-tap group';
+                pinEl.style.left = `${pin.x}%`;
+                pinEl.style.top = `${pin.y}%`;
+
+                const isReady = pin.status === 'ready';
+                const pulseClass = isReady ? 'pin-pulse-ready' : 'pin-pulse-repair';
+                const statusBadgeBg = isReady ? 'bg-emerald-500' : 'bg-amber-500';
+
+                // Red primary marker with specific status indicators
+                pinEl.innerHTML = `
+                    <div class="relative w-9 h-9 flex items-center justify-center">
+                        <div class="${pulseClass}"></div>
+                        <div class="w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg border-2 border-white transition-transform group-hover:scale-110">
+                            <i class="fa-solid ${pin.icon} text-xs"></i>
+                        </div>
+                        <span class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 ${statusBadgeBg} border-2 border-white rounded-full flex items-center justify-center">
+                            <i class="fa-solid ${isReady ? 'fa-check' : 'fa-wrench'} text-[8px] text-white"></i>
+                        </span>
+                    </div>
+                `;
+
+                pinEl.onclick = () => openPinModal(pin.id);
+                container.appendChild(pinEl);
+            });
+        }
+
+        function filterPins(filterType) {
+            activeFilter = filterType;
+            
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-900', 'text-white');
+                btn.classList.add('bg-slate-100', 'text-slate-600');
+            });
+
+            const activeBtn = document.getElementById(`filter-${filterType}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-slate-100', 'text-slate-600');
+                activeBtn.classList.add('bg-slate-900', 'text-white');
+            }
+
+            renderPins();
+        }
+
+        function updateCounts() {
+            const readyCount = pinData.filter(p => p.status === 'ready').length;
+            const repairCount = pinData.filter(p => p.status === 'repair').length;
+
+            document.getElementById('count-all').textContent = pinData.length;
+            document.getElementById('count-ready').textContent = readyCount;
+            document.getElementById('count-repair').textContent = repairCount;
+        }
+
+        function openPinModal(id) {
+            const pin = pinData.find(p => p.id === id);
+            if (!pin) return;
+
+            currentSelectedPin = pin;
+            const container = document.getElementById('modalContent');
+
+            if (pin.status === 'ready') {
+                // CASE 1: Ready to use (พร้อมใช้งาน)
+                container.innerHTML = `
+                    <div class="space-y-4 text-left">
+                        <!-- Status Badge -->
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                พร้อมใช้งาน
+                            </span>
+                            <span class="text-xs text-slate-400">จุดที่ #${pin.id}</span>
+                        </div>
+
+                        <!-- Header Requirement: "ม้านั่งพร้อมใช้งาน" / "ห้องน้ำพร้อมใช้งาน" -->
+                        <div>
+                            <h3 class="text-base font-bold text-slate-900 leading-snug flex items-center gap-2">
+                                <i class="fa-solid ${pin.icon} text-emerald-600"></i>
+                                ${pin.statusText}
+                            </h3>
+                            <p class="text-xs text-slate-500 mt-1">${pin.locationDetail}</p>
+                        </div>
+
+                        <!-- Time info: "ทำความสะอาดล่าสุด: 11:00น." -->
+                        <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-3 flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-sparkles text-sm"></i>
+                            </div>
+                            <div class="text-xs">
+                                <p class="font-medium text-emerald-800">ทำความสะอาดล่าสุด: <b class="text-emerald-950">${pin.lastServiceTime}</b></p>
+                                <p class="text-[11px] text-emerald-600">อุปกรณ์อยู่ในสภาพดีพร้อมใช้งาน</p>
+                            </div>
+                        </div>
+
+                        <!-- Action Button & Dropdown Option -->
+                        <div class="pt-1">
+                            <button onclick="toggleReportDropdown()" 
+                                class="w-full py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-xl text-xs active-tap transition-all flex items-center justify-center gap-2 shadow-sm">
+                                <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+                                <span>แจ้งชำรุด / ทำความสะอาด</span>
+                            </button>
+
+                            <!-- Options Dropdown Selection -->
+                            <div id="reportDropdown" class="hidden mt-3 p-3.5 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
+                                <label class="block text-xs font-bold text-slate-700">เลือกประเภทที่ต้องการแจ้ง:</label>
+                                
+                                <select id="reportOptionSelect" class="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-emerald-500">
+                                    <option value="ชำรุด">ชำรุด (อุปกรณ์เสียหาย/ไม่ปลอดภัย)</option>
+                                    <option value="ทำความสะอาด">ทำความสะอาด (สกปรก/มีคราบสกปรก)</option>
+                                </select>
+
+                                <div>
+                                    <textarea id="reportNotes" rows="2" placeholder="หมายเหตุเพิ่มเติม (ระบุถ้ามี)" 
+                                        class="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-emerald-500"></textarea>
+                                </div>
+
+                                <button onclick="submitReportForm()" 
+                                    class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl active-tap transition-all shadow-sm flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                                    <span>ยืนยันการแจ้ง (Submit)</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // CASE 2: Under Repair (ไม่พร้อมใช้งาน / กำลังซ่อมแซม)
+                const staff = pin.staff || defaultStaff;
+
+                container.innerHTML = `
+                    <div class="space-y-4 text-left">
+                        <!-- Status Badge -->
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-semibold flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+                                อยู่ระหว่างดำเนินการ
+                            </span>
+                            <span class="text-xs text-slate-400">จุดที่ #${pin.id}</span>
+                        </div>
+
+                        <!-- Header Requirement: "ม้านั่งกำลังซ่อมแซม" / "ห้องน้ำกำลังซ่อมแซม/ทำความสะอาด" -->
+                        <div>
+                            <h3 class="text-base font-bold text-slate-900 leading-snug flex items-center gap-2">
+                                <i class="fa-solid ${pin.icon} text-amber-600"></i>
+                                ${pin.statusText}
+                            </h3>
+                            <p class="text-xs text-slate-500 mt-1">${pin.locationDetail}</p>
+                        </div>
+
+                        <!-- Timeframe: "เวลาทำการซ่อมแซม/ทำความสะอาด: 13:00น. - 16:00น." -->
+                        <div class="bg-amber-50 border border-amber-200/80 rounded-2xl p-3 flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
+                                <i class="fa-solid fa-clock text-sm"></i>
+                            </div>
+                            <div class="text-xs">
+                                <p class="font-bold text-amber-900">เวลาทำการซ่อมแซม/ทำความสะอาด</p>
+                                <p class="text-amber-800 font-semibold mt-0.5">${pin.repairTime || '13:00น. - 16:00น.'}</p>
+                            </div>
+                        </div>
+
+                        <!-- Responsible Staff Card -->
+                        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3.5">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2.5">เจ้าหน้าที่รับผิดชอบ</p>
+                            
+                            <div class="flex items-center gap-3">
+                                <!-- Profile Photo with image_2026-09-30_234344722.png fallback -->
+                                <div class="relative w-12 h-12 rounded-xl overflow-hidden border-2 border-slate-200 shrink-0 bg-slate-200">
+                                    <img src="${staff.photo}" alt="${staff.name}" 
+                                         onerror="this.src='image_2026-09-30_234344722.png'; this.onerror=function(){this.src='https://placehold.co/100x100/334155/ffffff?text=Staff';}" 
+                                         class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h4 class="text-xs font-bold text-slate-800 truncate">${staff.name}</h4>
+                                    <p class="text-[11px] text-slate-500">${staff.role}</p>
+                                </div>
+                            </div>
+
+                            <!-- Phone Contact Button -->
+                            <div class="mt-3 pt-2.5 border-t border-slate-200/80">
+                                <a href="tel:${staff.phone}" onclick="showToast('กำลังโทรหาเจ้าหน้าที่...', 'info')"
+                                    class="w-full py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-medium active-tap transition-all flex items-center justify-center gap-2 shadow-xs">
+                                    <i class="fa-solid fa-phone text-[11px]"></i>
+                                    <span>โทรติดต่อเจ้าหน้าที่ (${staff.phone})</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Display Centered Modal
+            document.getElementById('pinModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('pinModal').classList.add('hidden');
+        }
+
+        function toggleReportDropdown() {
+            const dropdown = document.getElementById('reportDropdown');
+            if (dropdown) dropdown.classList.toggle('hidden');
+        }
+
+        function submitReportForm() {
+            const selectedOption = document.getElementById('reportOptionSelect')?.value || 'ชำรุด';
+            
+            if (currentSelectedPin) {
+                // Instantly update local status to repairing for real-time feedback
+                currentSelectedPin.status = 'repair';
+                currentSelectedPin.statusText = currentSelectedPin.category === 'bench' ? 'ม้านั่งกำลังซ่อมแซม' : 'ห้องน้ำกำลังซ่อมแซม/ทำความสะอาด';
+                currentSelectedPin.repairTime = '13:00น. - 16:00น.';
+                currentSelectedPin.staff = defaultStaff;
+
+                renderPins();
+                updateCounts();
+                closeModal();
+                
+                showToast(`ส่งรายงาน (${selectedOption}) สำเร็จ สถานะถูกเปลี่ยนเป็นกำลังซ่อมแซม`, 'success');
+            }
+        }
+
+        function zoomMap(factor) {
+            mapScale = Math.max(0.8, Math.min(2.0, mapScale * factor));
+            const wrapper = document.getElementById('mapWrapper');
+            wrapper.style.transform = `scale(${mapScale})`;
+            wrapper.style.transformOrigin = 'center center';
+            wrapper.style.transition = 'transform 0.2s ease-out';
+        }
+
+        function resetMapView() {
+            mapScale = 1;
+            const wrapper = document.getElementById('mapWrapper');
+            wrapper.style.transform = 'scale(1)';
+            showToast('รีเซ็ตมุมมองแผนที่', 'info');
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMessage.textContent = message;
+
+            if (type === 'success') {
+                toastIcon.className = 'w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center shrink-0 text-white';
+                toastIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
+            } else if (type === 'error') {
+                toastIcon.className = 'w-8 h-8 rounded-full bg-red-500 flex items-center justify-center shrink-0 text-white';
+                toastIcon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+            } else {
+                toastIcon.className = 'w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center shrink-0 text-white';
+                toastIcon.innerHTML = '<i class="fa-solid fa-info"></i>';
+            }
+
+            toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-[-20px]');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-[-20px]');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
