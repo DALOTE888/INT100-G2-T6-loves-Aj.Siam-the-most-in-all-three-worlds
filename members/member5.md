@@ -41,4 +41,4 @@
 - นฤสรณ์ สมประกอบ(กันย์)
 
 ---
-[Back To Our Team](../our-team.md)
+[Back To Our Team](../our.team.md)
