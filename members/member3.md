@@ -38,4 +38,4 @@
 - เฌอฟ้า โดมศรีฟ้า(ลิเดีย)
 
 ---
-[Back To Our Team](../our-team.md)
+[Back To Our Team](../our.team.md)
