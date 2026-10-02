@@ -22,7 +22,7 @@
 [View Ideate](/DTproject/3.ideate/ideate.md)
 
 ## 4.PROTOTYPE
-[View Prototype Website](/DTproject/4.prototype/website)
+[View Prototype Website](/DTproject/4.prototype/website.md)
 
 ## 5.TEST
 [View Feedback](/DTproject/5.test/feedback.md)
