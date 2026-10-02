@@ -42,4 +42,4 @@
 - กันตพงศ์ พูลโภคา(กันต์)
 
 ---
-[Back To Our Team](../our-team.md)
+[Back To Our Team](../our.team.md)
