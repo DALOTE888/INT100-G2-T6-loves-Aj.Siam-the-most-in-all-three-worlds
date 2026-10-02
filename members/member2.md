@@ -40,7 +40,7 @@
 
 # Introduction written by 
 
-- นายชนาทิป ยิ่งยง (อันดา) 69130500081
+- นายชนาทิป ยิ่งยง(อันดา)
 
 ---
 [Back To Our Team](../our-team.md)
