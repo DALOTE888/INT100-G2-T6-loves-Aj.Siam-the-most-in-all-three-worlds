@@ -15,6 +15,6 @@
 
 ---
 
-[Next ➡️ lnterview](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/DTproject/1.empathize/interview.md)
+[Next ➡️ lnterview](/DTproject/1.empathize/interview.md)
 
 ---
