@@ -30,4 +30,4 @@
 - วิเคราะห์ช่วงเวลาการใช้งาน นำข้อมูลมาวิเคราะห์ช่วงเวลาที่มีผู้ใช้บริการหนาแน่น เพื่อเพิ่มรอบทำความสะอาด เจ้าหน้าที่ หรือทรัพยากรในช่วงเวลาดังกล่าว
 
 ---
-[Next ➡️ 4.Prototype](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/DTproject/4.prototype/website)
+[Next ➡️ 4.Prototype](/DTproject/4.prototype/website.md)
