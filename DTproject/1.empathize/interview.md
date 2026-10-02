@@ -52,6 +52,6 @@
 คำตอบที่ได้: ภาพรวมไม่ค่อยมีปัญหาใหญ่ในการใช้งาน แต่จุดโฟกัสหลักคือการซ่อมแซมและรักษาความสะอาดสิ่งอำนวยความสะดวก
 
 ---
-[Next ➡️ Say-Do-Think-Feel](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/DTproject/1.empathize/say-do-think-feel.md)
+[Next ➡️ Say-Do-Think-Feel](/DTproject/1.empathize/say-do-think-feel.md)
 
 ---
