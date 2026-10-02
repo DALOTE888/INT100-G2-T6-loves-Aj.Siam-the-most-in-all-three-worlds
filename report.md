@@ -21,4 +21,4 @@
 [View feedback](./Test/feedback.md)
 
 ## Prototype
-[View POINT OF VIEW](./prototype/website)
+[View Prototype](./prototype/website)
