@@ -32,6 +32,6 @@ Inferred Feel (รู้สึก): อบอุ่น/ผ่อนคลาย 
 
 ---
 
-[Next ➡️ Userpersona](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/DTproject/1.empathize/userpersona.md)
+[Next ➡️ Userpersona](/DTproject/1.empathize/userpersona.md)
 
 ---
