@@ -1,24 +1,30 @@
 # Design Thinking Project
-## Interview Script
-[View Interview Script](./Interview/interview.md)
 
-## Say-Do-Think-Feel
-[View say-do-think-feel](./empathize/say-do-think-feel.md)
+## Members 
+[View Members](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/DTproject/our.team.md)
 
-## Think-Feel_Inference
-[View Think-Feel_Inference](./empathize/thinkfeel_inference.md)
 
-## What-How-Why
-[View What-How-Why](./empathize/what_how_why.md)
+## 1.EMPATHY
+[View Interview Script](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/DTproject/1.empathize/interview.md)
 
-## User Persona
-[View User Persona](./empathize/userpersona.md)
+[View Say-Do-Think-Feel](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/DTproject/1.empathize/say-do-think-feel.md)
 
-## POINT OF VIEW (POV)
-[View POINT OF VIEW](./define/pov.md)
+[View Thinkfeel_inference](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/DTproject/1.empathize/thinkfeel_inference.md)
 
-## Test
-[View feedback](./Test/feedback.md)
+[View Userpersona](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/DTproject/1.empathize/userpersona.md)
 
-## Prototype
-[View Prototype](./prototype/website)
+[View What-How-Why](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/DTproject/1.empathize/what_how_why.md)
+
+## 2.DEFINE
+[View Define](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/DTproject/2.define/define.md)
+
+## 3.IDEATE
+[View Ideate](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/DTproject/3.ideate/ideate.md)
+
+## 4.PROTOTYPE
+[View Prototype Website](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/DTproject/4.prototype/website)
+
+## 5.TEST
+[View Feedback](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/DTproject/5.test/feedback.md)
+
+---

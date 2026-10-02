@@ -1,10 +1,8 @@
-# Our Team
-
-## Team Members
-loves-Aj.Siam-the-most-in-all-three-worlds
+# Team Members
+- loves-Aj.Siam-the-most-in-all-three-worlds
 
 ### Why did we choose this team name?
-Because I was inspired by a TikTok meme from someone named M All New.
+- Because I was inspired by a TikTok meme from someone named M All New.
 
 ### 
 # Members
@@ -14,5 +12,9 @@ Because I was inspired by a TikTok meme from someone named M All New.
 - [นฤสรณ์ สมประกอบ](members/member4.md)
 - [พิชญาภา ดีประเสริฐ](members/member5.md)
 - [รพีภัทร ก้อนแก้ว](members/member6.md)
+
+---
+
+[Next ➡️ lnterview](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/DTproject/1.empathize/interview.md)
 
 ---

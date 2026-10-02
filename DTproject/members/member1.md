@@ -37,4 +37,4 @@
 - รพีภัทร ก้อนแก้ว(ไอซ์)
 
 ---
-[Back To Our Team](../our.team.md)
+[Next to Member 2](../members/member2.md)

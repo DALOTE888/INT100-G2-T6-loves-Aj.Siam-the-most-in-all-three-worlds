@@ -43,4 +43,4 @@
 - ชนาทิป ยิ่งยง(อันดา)
 
 ---
-[Back To Our Team](../our.team.md)
+[Next to Member 3](../members/member3.md)
