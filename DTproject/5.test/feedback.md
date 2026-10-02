@@ -194,6 +194,6 @@ Mid/High-Fidelity Prototype
 ```
 
 ---
-[Next ➡️ กลับหน้าหลัก](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/report.md)
+[Next ➡️ กลับหน้าหลัก](/report.md)
 
 ---
