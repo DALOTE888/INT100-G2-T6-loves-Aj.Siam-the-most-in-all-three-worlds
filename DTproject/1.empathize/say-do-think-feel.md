@@ -105,7 +105,7 @@
 - รู้สึกไม่ค่อยปลอดภัยเวลาใช้ห้องน้ำ
 
 ---
-[Next ➡️ Thinkfeel_inference](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/DTproject/1.empathize/thinkfeel_inference.md)
+[Next ➡️ Thinkfeel_inference](/DTproject/1.empathize/thinkfeel_inference.md)
 
 ---
 
