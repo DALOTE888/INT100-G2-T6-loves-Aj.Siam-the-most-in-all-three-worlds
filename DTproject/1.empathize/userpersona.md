@@ -36,6 +36,6 @@
 **โดยเฉพาะ ห้องน้ำที่สะอาดและปลอดภัย รวมถึงการซ่อมแซมอุปกรณ์ที่ชำรุดและการดูแลสถานที่อย่างสม่ำเสมอ**
 
 ---
-[Next ➡️ What-How-Why](/INT100-G2-T6-loves-Aj.Siam-the-most-in-all-three-worlds/DTproject/1.empathize/what_how_why.md)
+[Next ➡️ What-How-Why](/DTproject/1.empathize/what_how_why.md)
 
 ---
